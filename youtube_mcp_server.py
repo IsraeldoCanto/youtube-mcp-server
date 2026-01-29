@@ -31,6 +31,28 @@ mcp = FastMCP("YouTube Data Server")
 # Expose the SSE application for uvicorn/Docker
 app = mcp.sse_app
 
+# --------------------------------------------------------------------------------
+# CRITICAL FIX FOR COOLIFY/DOCKER
+# --------------------------------------------------------------------------------
+try:
+    from starlette.middleware.cors import CORSMiddleware
+    from starlette.middleware.trustedhost import TrustedHostMiddleware
+    
+    # Allow all hosts (fixes "Invalid Host header" and "421 Misdirected Request")
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=["*"])
+    
+    # Allow all origins (fixes CORS issues with n8n)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+    print("✅ Security middleware applied: Allowed all hosts and origins for Docker/Coolify.")
+except ImportError:
+    print("⚠️ Warning: Could not apply security middleware. 'starlette' package may be missing.")
+# --------------------------------------------------------------------------------
+
 # YouTube API configuration
 YOUTUBE_API_BASE = "https://www.googleapis.com/youtube/v3"
 
