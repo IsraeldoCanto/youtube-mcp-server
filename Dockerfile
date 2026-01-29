@@ -21,4 +21,4 @@ EXPOSE 8000
 
 # Run with uvicorn
 # We use the 'app' object exposed in youtube_mcp_server.py (which is mcp.sse_app)
-CMD ["uvicorn", "youtube_mcp_server:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "youtube_mcp_server:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers", "--forwarded-allow-ips", "*"]
