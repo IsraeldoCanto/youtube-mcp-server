@@ -26,7 +26,9 @@ except ImportError:
     NoTranscriptFound = None
 
 # Initialize the MCP server
-mcp = FastMCP("YouTube Data Server")
+from mcp.server.transport_security import TransportSecuritySettings
+security_settings = TransportSecuritySettings(enable_dns_rebinding_protection=False)
+mcp = FastMCP("YouTube Data Server", transport_security=security_settings)
 
 # Expose the SSE application for uvicorn/Docker
 app = mcp.sse_app
